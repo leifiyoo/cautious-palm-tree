@@ -1,0 +1,67 @@
+<script>
+  (function () {
+    var PASSWORD_HASH = "ac9689e2272427085e35b9d3e3e8bed88cb3434828b43b86fc0596cad4c6e270";
+    var bodyElement = document.body;
+
+    function hashText(value) {
+      var data = new TextEncoder().encode(value);
+      return window.crypto.subtle.digest("SHA-256", data).then(function (buffer) {
+        var bytes = new Uint8Array(buffer);
+        var hash = "";
+        for (var i = 0; i < bytes.length; i++) {
+          hash += bytes[i].toString(16).padStart(2, "0");
+        }
+        return hash;
+      });
+    }
+
+    function unlockSite() {
+      var gate = document.getElementById("site-gate");
+      if (gate) {
+        gate.remove();
+      }
+      document.documentElement.classList.remove("cpt-pending");
+    }
+
+    var gate = document.createElement("div");
+    gate.id = "site-gate";
+    gate.innerHTML = `
+      <div class="site-gate-card" role="dialog" aria-modal="true" aria-labelledby="site-gate-title">
+        <h1 id="site-gate-title">Welcome</h1>
+        <p>Enter the password to access this site.</p>
+        <form class="site-gate-form" id="site-gate-form">
+          <input class="site-gate-input" id="site-gate-input" type="password" autocomplete="current-password" placeholder="Password" aria-label="Password" required />
+          <button class="site-gate-button" type="submit">Continue</button>
+          <p class="site-gate-error" id="site-gate-error" aria-live="polite"></p>
+        </form>
+      </div>`;
+
+    bodyElement.appendChild(gate);
+    var form = document.getElementById("site-gate-form");
+    var input = document.getElementById("site-gate-input");
+    var error = document.getElementById("site-gate-error");
+
+    input.focus();
+
+    form.addEventListener("submit", function (event) {
+      event.preventDefault();
+      error.textContent = "";
+
+      hashText(input.value)
+        .then(function (hash) {
+          if (hash === PASSWORD_HASH) {
+            unlockSite();
+            return;
+          }
+
+          error.textContent = "Incorrect password. Please try again.";
+          input.value = "";
+          input.focus();
+        })
+        .catch(function (err) {
+          error.textContent = "Unable to verify password. Please refresh and try again.";
+          console.error("Password verification failed.", err);
+        });
+    });
+  })();
+</script>
