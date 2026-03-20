@@ -1,0 +1,108 @@
+<style>
+  html.cpt-pending body {
+    opacity: 0;
+  }
+
+  html.cpt-pending body > *:not(#site-gate) {
+    display: none !important;
+  }
+
+  body {
+    transition: opacity 0.2s ease;
+  }
+
+  body.cpt-ready {
+    opacity: 1;
+  }
+
+  #site-gate {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    z-index: 9999;
+    background: radial-gradient(circle at top, #f8fafc 0%, #e2e8f0 100%);
+    font-family: "Inter", "Segoe UI", sans-serif;
+  }
+
+  .site-gate-card {
+    width: 100%;
+    max-width: 400px;
+    border: 1px solid hsl(214 32% 91%);
+    border-radius: 0.75rem;
+    background: hsl(0 0% 100%);
+    box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+    padding: 1.5rem;
+  }
+
+  .site-gate-card h1 {
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: hsl(222 47% 11%);
+  }
+
+  .site-gate-card p {
+    margin: 0.5rem 0 1rem;
+    color: hsl(215 16% 47%);
+    font-size: 0.95rem;
+  }
+
+  .site-gate-form {
+    display: grid;
+    gap: 0.75rem;
+  }
+
+  .site-gate-input {
+    width: 100%;
+    border-radius: 0.5rem;
+    border: 1px solid hsl(214 32% 91%);
+    background: hsl(210 40% 98%);
+    padding: 0.6rem 0.75rem;
+    font-size: 0.95rem;
+    color: hsl(222 47% 11%);
+  }
+
+  .site-gate-input:focus {
+    outline: none;
+    border-color: hsl(221 83% 53%);
+    box-shadow: 0 0 0 2px hsl(221 83% 53% / 0.15);
+  }
+
+  .site-gate-button {
+    width: 100%;
+    border: 0;
+    border-radius: 0.5rem;
+    background: hsl(222 47% 11%);
+    color: hsl(210 40% 98%);
+    padding: 0.6rem 0.75rem;
+    font-size: 0.95rem;
+    font-weight: 500;
+    cursor: pointer;
+  }
+
+  .site-gate-button:hover {
+    background: hsl(222 47% 18%);
+  }
+
+  .site-gate-error {
+    min-height: 1.25rem;
+    margin: 0;
+    color: hsl(0 84% 60%);
+    font-size: 0.85rem;
+  }
+</style>
+<script>
+  (function () {
+    document.documentElement.classList.add("cpt-pending");
+    window.__cptSiteUnlocked = false;
+
+    try {
+      window.__cptSiteUnlocked = window.localStorage.getItem("cpt-site-access") === "granted";
+    } catch (e) {
+      window.__cptSiteUnlocked = false;
+    }
+  })();
+</script>
