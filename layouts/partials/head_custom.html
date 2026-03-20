@@ -1,18 +1,6 @@
 <style>
-  html.cpt-pending body {
-    opacity: 0;
-  }
-
   html.cpt-pending body > *:not(#site-gate) {
     display: none !important;
-  }
-
-  body {
-    transition: opacity 0.2s ease;
-  }
-
-  body.cpt-ready {
-    opacity: 1;
   }
 
   #site-gate {
@@ -97,12 +85,5 @@
 <script>
   (function () {
     document.documentElement.classList.add("cpt-pending");
-    window.__cptSiteUnlocked = false;
-
-    try {
-      window.__cptSiteUnlocked = window.localStorage.getItem("cpt-site-access") === "granted";
-    } catch (e) {
-      window.__cptSiteUnlocked = false;
-    }
   })();
 </script>
